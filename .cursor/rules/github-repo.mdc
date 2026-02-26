@@ -1,0 +1,12 @@
+---
+description: GitHub-репозиторий проекта
+alwaysApply: true
+---
+
+# Репозиторий проекта
+
+Основной код проекта хранится в GitHub:
+
+- **Репозиторий:** https://github.com/bonyasil/Project
+- Клонирование: `git clone https://github.com/bonyasil/Project.git`
+- При пуше использовать свой токен или SSH; токен не хранить в файлах репозитория и не коммитить.
