@@ -37,18 +37,20 @@ WEATHER_CODES_RU: dict[int, str] = {
 
 
 def _format_forecast(data: dict[str, Any]) -> str:
-    """Форматирует ответ API в читаемый текст для Telegram."""
+    """Форматирует ответ API в читаемый текст для Telegram (HTML)."""
     current = data.get("current", {})
     daily = data.get("daily", {})
 
     temp = current.get("temperature_2m")
+    feels = current.get("apparent_temperature")
     code = current.get("weather_code", 0)
     wind_speed = current.get("wind_speed_10m")
     humidity = current.get("relative_humidity_2m")
     desc = WEATHER_CODES_RU.get(int(code), "—")
 
+    feels_line = f" (ощущается {feels} °C)" if feels is not None else ""
     lines = [
-        f"🌡 Температура: {temp} °C",
+        f"🌡 Температура: <b>{temp} °C</b>{feels_line}",
         f"☁️ Погода: {desc}",
         f"💨 Ветер: {wind_speed} км/ч",
         f"💧 Влажность: {humidity} %",
@@ -62,7 +64,7 @@ def _format_forecast(data: dict[str, Any]) -> str:
         lines.append(f"  макс {daily_temps[1]} °C, мин {daily_mins[1]} °C")
 
     lines.append("")
-    lines.append("Данные: Open-Meteo (open-meteo.com)")
+    lines.append("<i>Данные: Open-Meteo (open-meteo.com)</i>")
     return "\n".join(lines)
 
 
@@ -75,7 +77,13 @@ async def get_weather(lat: float, lon: float) -> str:
     params = {
         "latitude": lat,
         "longitude": lon,
-        "current": ["temperature_2m", "relative_humidity_2m", "weather_code", "wind_speed_10m"],
+        "current": [
+            "temperature_2m",
+            "relative_humidity_2m",
+            "weather_code",
+            "wind_speed_10m",
+            "apparent_temperature",
+        ],
         "daily": ["temperature_2m_max", "temperature_2m_min"],
         "timezone": "auto",
     }
