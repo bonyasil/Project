@@ -27,16 +27,25 @@ ADVICE_RECIPE = "advice_recipe"
 CALLBACK_MAIN_MENU = "menu_main"
 
 
+def _city_btn(city_name: str) -> InlineKeyboardButton:
+    """Кнопка города. Москва — красная (danger) через api_kwargs, остальные — без стиля."""
+    if city_name == "Москва":
+        return InlineKeyboardButton(
+            city_name,
+            callback_data=city_name,
+            api_kwargs={"style": "danger"},
+        )
+    return InlineKeyboardButton(city_name, callback_data=city_name)
+
+
 def _build_cities_keyboard() -> InlineKeyboardMarkup:
-    """Строит клавиатуру с кнопками городов (по 2 в ряд). При возможности — синие кнопки (primary)."""
+    """Строит клавиатуру с кнопками городов (по 2 в ряд). Москва — красная кнопка."""
     keys = list(CITIES.keys())
     rows = []
     for i in range(0, len(keys), 2):
-        row = [
-            InlineKeyboardButton(keys[i], callback_data=keys[i]),
-        ]
+        row = [_city_btn(keys[i])]
         if i + 1 < len(keys):
-            row.append(InlineKeyboardButton(keys[i + 1], callback_data=keys[i + 1]))
+            row.append(_city_btn(keys[i + 1]))
         rows.append(row)
     return InlineKeyboardMarkup(rows)
 
