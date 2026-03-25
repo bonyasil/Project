@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avito Price Monitor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        </div>
+        <span class="logo-text">PriceMonitor</span>
+      </div>
+      <div class="nav-label">Навигация</div>
+      <nav class="nav">
+        <a href="#settings" class="nav-item active" data-section="settings">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
+          Настройки
+        </a>
+        <a href="#actualize" class="nav-item" data-section="actualize">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.95"/></svg>
+          Актуализировать
+        </a>
+        <a href="#price-changes" class="nav-item" data-section="price-changes">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          Изменение цен
+        </a>
+        <a href="#removed" class="nav-item" data-section="removed">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          Снято с продажи
+        </a>
+        <a href="#back-on-sale" class="nav-item" data-section="back-on-sale">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.95"/><polyline points="12 8 12 12 14 14"/></svg>
+          Снова в продаже
+        </a>
+        <a href="#new-items" class="nav-item" data-section="new-items">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          Новинки
+        </a>
+        <a href="#nacenka" class="nav-item" data-section="nacenka">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/><circle cx="19" cy="5" r="3" fill="currentColor" stroke="none" opacity="0.3"/></svg>
+          Наценка
+        </a>
+        <a href="#applied-changes" class="nav-item" data-section="applied-changes">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          Корректировка БД
+        </a>
+        <a href="#add-items" class="nav-item" data-section="add-items">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          Новые объявления
+        </a>
+        <a href="#avito-upload" class="nav-item" data-section="avito-upload">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          Авито загрузка
+        </a>
+        <a href="#photo-replace" class="nav-item" data-section="photo-replace">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          Замена фотографий
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Settings Section -->
+      <section id="settings" class="section active">
+        <h2>Настройки</h2>
+        <div id="server-check" class="server-check" role="status" aria-live="polite"></div>
+        
+        <div class="card">
+          <h3>Источники мониторинга</h3>
+          <p class="hint">Для каждого источника выберите тип таблицы и укажите ссылку. Запускайте сервер из папки <strong>price-monitoring</strong>: <code>npm start</code>.</p>
+          <div class="form-group">
+            <label>Тип источника (псевдоним):</label>
+            <select id="source-alias" class="input">
+              <option value="VSE4">VSE4 — Avito</option>
+              <option value="baikal">baikal — Baikal Wheels</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label id="source-url-label">Ссылка на страницу Avito:</label>
+            <input type="text" id="source-url" class="input" placeholder="https://www.avito.ru/...">
+          </div>
+          <button type="button" id="add-source" class="btn btn-secondary">➕ Добавить</button>
+          <div id="sources-status" class="status"></div>
+          <ul id="sources-list" class="sources-list"></ul>
+        </div>
+
+        <div class="card">
+          <h3>Конфигурация</h3>
+          <div class="form-group">
+            <label>Site API URL:</label>
+            <input type="text" id="config-api-url" class="input">
+          </div>
+          <div class="form-group">
+            <label>DB Path:</label>
+            <div class="input-with-btn">
+              <input type="text" id="config-db-path" class="input">
+              <button type="button" id="browse-db-path" class="btn btn-secondary">Обзор...</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Bearer Token:</label>
+            <input type="password" id="config-token" class="input">
+          </div>
+          <button id="save-config" class="btn btn-secondary">
+            💾 Сохранить конфигурацию
+          </button>
+        </div>
+
+        <div class="card">
+          <h3>SSH — доступ к БД сайта</h3>
+          <p style="font-size:13px;color:var(--text-2);margin:0 0 14px;">Настройки для прямого подключения к SQLite на VPS через SSH.</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div class="form-group" style="margin:0;">
+              <label>Host:</label>
+              <input type="text" id="ssh-host" class="input" placeholder="192.168.1.1 или domain.ru">
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label>Port:</label>
+              <input type="number" id="ssh-port" class="input" placeholder="22" value="22" style="width:100%;">
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label>User:</label>
+              <input type="text" id="ssh-user" class="input" placeholder="root">
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label>Путь к ключу (.pem / .ppk):</label>
+              <input type="text" id="ssh-key-path" class="input" placeholder="C:\Users\PC\.ssh\id_rsa">
+            </div>
+          </div>
+          <div class="form-group" style="margin-top:12px;">
+            <label>Путь к БД на сервере (VPS):</label>
+            <input type="text" id="ssh-db-path" class="input" placeholder="/var/www/site/data/diski_sait.db">
+          </div>
+          <div class="form-group" style="margin-top:12px;">
+            <label>Путь к локальной БД сайта (опционально):</label>
+            <input type="text" id="local-site-db-path" class="input" placeholder="C:\Users\PC\Desktop\Project\b_ZLm...\diski_sait.db">
+          </div>
+          <div style="display:flex;gap:10px;margin-top:14px;">
+            <button id="save-ssh-config" class="btn btn-secondary">💾 Сохранить SSH настройки</button>
+            <button id="test-ssh" class="btn btn-secondary">🔌 Проверить соединение</button>
+          </div>
+          <div id="ssh-status" class="status" style="margin-top:10px;"></div>
+        </div>
+
+        <!-- Генератор текста Avito -->
+        <div class="card" id="text-gen-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+            <h3 style="margin:0;">Генератор текста Avito</h3>
+            <button id="text-gen-save-btn" class="btn btn-secondary">💾 Сохранить</button>
+          </div>
+
+          <div class="form-group" style="display:flex;align-items:center;gap:14px;margin-bottom:20px;">
+            <label style="margin:0;white-space:nowrap;">Вероятность замены символов (%):</label>
+            <input type="number" id="text-gen-probability" class="input" min="0" max="100" value="30"
+              style="width:80px;">
+            <span style="font-size:12px;color:var(--text-2);">Кириллица → латиница (0 = без замены)</span>
+          </div>
+
+          <div style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+            <strong style="font-size:14px;">Предложения</strong>
+            <button id="text-gen-add-sentence-btn" class="btn btn-secondary btn-xs">+ Добавить предложение</button>
+          </div>
+
+          <div id="text-gen-sentences" style="display:flex;flex-direction:column;gap:12px;"></div>
+          <div id="text-gen-status" class="status" style="margin-top:12px;"></div>
+        </div>
+      </section>
+
+      <!-- Actualize Section: парсинг по псевдониму, результат — список объявлений -->
+      <section id="actualize" class="section">
+        <h2>Актуализировать</h2>
+        <div class="card">
+          <div class="form-group">
+            <label>Выберите источник (псевдоним):</label>
+            <select id="actualize-alias-select" class="input">
+              <option value="">Нет источников. Добавьте в Настройках.</option>
+            </select>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <button id="run-monitoring" class="btn btn-primary">🚀 Запустить мониторинг</button>
+            <button id="export-parsed-excel" class="btn btn-secondary" disabled title="Доступно после запуска мониторинга">📥 Экспорт в Excel</button>
+          </div>
+          <div id="actualize-status" class="status"></div>
+        </div>
+        <div class="toolbar" style="margin-bottom:12px;">
+          <input type="text" id="search-actualize" class="input search" placeholder="🔍 Поиск по наименованию...">
+        </div>
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Наименование</th>
+                <th>Цена</th>
+                <th>Ссылка</th>
+              </tr>
+            </thead>
+            <tbody id="actualize-tbody">
+              <tr><td colspan="3" class="empty">Выберите источник и нажмите «Запустить мониторинг».</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pagination" id="actualize-pagination"></div>
+      </section>
+
+      <!-- Alias tabs for result sections -->
+      <div id="result-alias-tabs" class="section-tabs" style="margin-bottom:0;border-bottom:1px solid var(--border);padding-bottom:0;"></div>
+
+      <!-- Price Changes Section -->
+      <section id="price-changes" class="section">
+        <h2>Изменение цен</h2>
+        
+        <div class="toolbar">
+          <input type="text" id="search-price" class="input search" placeholder="🔍 Поиск по названию, ID или ссылке...">
+          <button id="show-price-results" class="btn btn-secondary">Показать результат</button>
+          <button id="recalc-price" class="btn btn-secondary">🔄 Обновить результат</button>
+          <button id="select-all-price" class="btn btn-secondary">Выделить все</button>
+          <button id="apply-prices" class="btn btn-primary">Заменить цены в базе</button>
+        </div>
+
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th width="50"><input type="checkbox" id="checkbox-all-price"></th>
+                <th id="th-price-id-col">ID</th>
+                <th>Название</th>
+                <th id="th-price-new-col">Цена сайта (parser)</th>
+                <th id="th-price-old-col">Цена БД</th>
+                <th id="th-price-change-sort" style="cursor:pointer;user-select:none;" title="Сортировать по изменению цены">Изменение цены ↕</th>
+                <th>Цена OW</th>
+                <th>Ссылка</th>
+              </tr>
+            </thead>
+            <tbody id="price-changes-tbody">
+              <tr>
+                <td colspan="8" class="empty">Нет данных. Запустите мониторинг.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination" id="price-pagination"></div>
+      </section>
+
+      <!-- Removed Items Section -->
+      <section id="removed" class="section">
+        <h2>Снято с продажи</h2>
+        
+        <div class="toolbar">
+          <input type="text" id="search-removed" class="input search" placeholder="🔍 Поиск (в т.ч. по ссылке)...">
+          <button id="show-removed-results" class="btn btn-secondary">Показать результат</button>
+          <button id="recalc-removed" class="btn btn-secondary">🔄 Обновить результат</button>
+          <button id="check-avito-removed" class="btn btn-secondary">🔍 Проверить через Avito</button>
+          <button id="stop-avito-check" class="btn btn-secondary" style="display:none">⏹ Стоп</button>
+          <button id="select-all-removed" class="btn btn-secondary">Выделить все</button>
+          <button id="apply-removed" class="btn btn-danger">Внести изменения в базу</button>
+        </div>
+
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th width="50"><input type="checkbox" id="checkbox-all-removed"></th>
+                <th>ID</th>
+                <th>Название</th>
+                <th>URL</th>
+                <th id="avito-check-col-header" style="display:none">Avito статус</th>
+              </tr>
+            </thead>
+            <tbody id="removed-tbody">
+              <tr>
+                <td colspan="4" class="empty">Нет данных. Запустите мониторинг.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination" id="removed-pagination"></div>
+      </section>
+
+      <!-- Back On Sale Section -->
+      <section id="back-on-sale" class="section">
+        <h2>Снова в продаже</h2>
+
+        <div class="toolbar">
+          <input type="text" id="search-back-on-sale" class="input search" placeholder="🔍 Поиск по названию, ID или ссылке...">
+          <button id="show-back-on-sale-results" class="btn btn-secondary">Показать результат</button>
+          <button id="recalc-back-on-sale" class="btn btn-secondary">🔄 Обновить результат</button>
+          <button id="select-all-back-on-sale" class="btn btn-secondary">Выделить все</button>
+          <button id="apply-back-on-sale" class="btn btn-success">Восстановить в базе</button>
+        </div>
+
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th width="50"><input type="checkbox" id="checkbox-all-back-on-sale"></th>
+                <th>ID</th>
+                <th>Название</th>
+                <th>Цена Avito</th>
+                <th>Цена БД</th>
+                <th>Изменение цены</th>
+                <th>Ссылка</th>
+              </tr>
+            </thead>
+            <tbody id="back-on-sale-tbody">
+              <tr>
+                <td colspan="7" class="empty">Нет данных. Запустите мониторинг.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination" id="back-on-sale-pagination"></div>
+      </section>
+
+      <!-- New Items Section -->
+      <section id="new-items" class="section">
+        <h2>Новинки</h2>
+        
+        <div class="toolbar">
+          <input type="text" id="search-new" class="input search" placeholder="🔍 Поиск (в т.ч. по ссылке)...">
+          <button id="show-new-results" class="btn btn-secondary">Показать результат</button>
+          <button id="export-excel" class="btn btn-success">📊 Экспорт в Excel</button>
+        </div>
+
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Название</th>
+                <th>Цена</th>
+                <th>Ссылка</th>
+              </tr>
+            </thead>
+            <tbody id="new-items-tbody">
+              <tr>
+                <td colspan="3" class="empty">Нет данных. Запустите мониторинг.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination" id="new-pagination"></div>
+      </section>
+
+      <!-- Nacenka Section -->
+      <section id="nacenka" class="section">
+        <h2>Наценка</h2>
+
+        <div class="card">
+          <div class="toolbar" style="flex-wrap:wrap;gap:8px;">
+            <input type="text" id="nacenka-search" class="input search" placeholder="🔍 Поиск по ID или названию..." style="min-width:200px;">
+            <select id="nacenka-filter-maker" class="input" style="width:160px;"><option value="">Все производители</option></select>
+            <select id="nacenka-filter-model" class="input" style="width:160px;"><option value="">Все модели</option></select>
+            <select id="nacenka-filter-diam" class="input" style="width:120px;"><option value="">Все диаметры</option></select>
+            <button id="nacenka-load" class="btn btn-primary">Показать данные</button>
+            <button id="nacenka-save" class="btn btn-success" disabled>Обновить в БД</button>
+          </div>
+          <div id="nacenka-status" class="status"></div>
+        </div>
+
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Название</th>
+                <th>Производитель</th>
+                <th>Модель</th>
+                <th>Диаметр</th>
+                <th>Цена Avito</th>
+                <th>Наценка</th>
+                <th>Цена OW</th>
+              </tr>
+            </thead>
+            <tbody id="nacenka-tbody">
+              <tr><td colspan="8" class="empty">Нажмите «Показать данные»</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pagination" id="nacenka-pagination"></div>
+      </section>
+
+      <!-- Applied Changes Section: списки внесённых в локальную БД изменений -->
+      <section id="applied-changes" class="section">
+        <h2>Корректировка БД</h2>
+        <p class="section-desc">Изменения, внесённые в базы данных. Локальная БД — файл диски, БД сайта — синхронизация через API.</p>
+
+        <div class="section-tabs">
+          <button class="section-tab-btn active" data-tab="local-db">Локальная БД (VSE4)</button>
+          <button class="section-tab-btn" data-tab="local-db-baikal">Локальная БД (baikal)</button>
+          <button class="section-tab-btn" data-tab="site-db">БД сайта</button>
+        </div>
+
+        <!-- Локальная БД -->
+        <div class="section-tab-pane active" id="tab-local-db">
+
+          <!-- Обновить текст -->
+          <div class="card">
+            <h3>Обновить текст из Excel</h3>
+            <p style="font-size:13px;color:var(--text-2);margin:0 0 14px;">Выберите файл Excel со столбцами <b>Id</b> и <b>Description</b>. Значения будут записаны в колонку <b>text_avito</b> таблицы VSE4 по совпадению ID.</p>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+              <label class="btn btn-secondary" style="cursor:pointer;margin:0;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-2px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Выбрать файл
+                <input type="file" id="text-file" accept=".xlsx,.xls" style="display:none;">
+              </label>
+              <span id="text-filename" style="font-size:13px;color:var(--text-2);">Файл не выбран</span>
+              <button id="text-import" class="btn btn-primary" disabled style="margin:0;">Обновить текст</button>
+            </div>
+            <div id="text-preview" style="margin-top:12px;font-size:13px;color:var(--text-2);"></div>
+            <div id="text-status" style="margin-top:8px;"></div>
+          </div>
+
+          <!-- Внести ImageUrls -->
+          <div class="card">
+            <h3>Внести ImageUrls из Excel</h3>
+            <p style="font-size:13px;color:var(--text-2);margin:0 0 14px;">Выберите файл Excel со столбцами <b>Id</b> и <b>ImageUrls</b>. Значения будут записаны в колонку <b>ImageUrls</b> таблицы VSE4 по совпадению ID.</p>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+              <label class="btn btn-secondary" style="cursor:pointer;margin:0;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-2px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Выбрать файл
+                <input type="file" id="image-urls-file" accept=".xlsx,.xls" style="display:none;">
+              </label>
+              <span id="image-urls-filename" style="font-size:13px;color:var(--text-2);">Файл не выбран</span>
+              <button id="image-urls-import" class="btn btn-primary" disabled style="margin:0;">Внести ImageUrls</button>
+            </div>
+            <div id="image-urls-preview" style="margin-top:12px;font-size:13px;color:var(--text-2);"></div>
+            <div id="image-urls-status" style="margin-top:8px;"></div>
+          </div>
+
+          <!-- ЯД - ImageUrls -->
+          <div class="card">
+            <h3>ЯД — ImageUrls</h3>
+            <p style="font-size:13px;color:var(--text-2);margin:0 0 14px;">
+              Заполняет <b>ImageUrls</b> из <b>link_foto</b> только для строк где <b>ImageUrls = null</b>. Заменяет указанный префикс на <code>yandex_disk://</code>, затем все <code>\</code> → <code>/</code>.
+            </p>
+            <div class="form-group" style="margin-bottom:10px;">
+              <label style="font-size:13px;">Заменить префикс:</label>
+              <input type="text" id="yd-prefix" class="input"
+                placeholder="E:\Ydisk\Yandex.Disk\"
+                style="font-family:monospace;font-size:13px;">
+            </div>
+            <div style="font-size:12px;color:var(--text-2);margin-bottom:12px;" id="yd-preview"></div>
+            <button id="yd-image-urls-btn" class="btn btn-primary">Заполнить ImageUrls</button>
+            <div id="yd-status" class="status" style="margin-top:10px;"></div>
+          </div>
+
+          <!-- Исправить запятые на точки -->
+          <div class="card">
+            <h3>Исправить десятичные разделители</h3>
+            <p style="font-size:13px;color:var(--text-2);margin:0 0 14px;">Заменяет запятые на точки в столбцах <b>centr_otv</b>, <b>diam_otv</b>, <b>width</b> таблицы VSE4.</p>
+            <button id="fix-decimals-btn" class="btn btn-secondary">Исправить запятые → точки</button>
+            <div id="fix-decimals-status" style="margin-top:10px;"></div>
+          </div>
+
+          <!-- Внести AvitoId -->
+          <div class="card">
+            <h3>Внести AvitoId из Excel</h3>
+            <p style="font-size:13px;color:var(--text-2);margin:0 0 14px;">Выберите файл Excel со столбцами <b>Id</b> и <b>AvitoId</b>. Значения будут записаны в таблицу VSE4 по совпадению ID.</p>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+              <label class="btn btn-secondary" style="cursor:pointer;margin:0;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-2px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Выбрать файл
+                <input type="file" id="avito-id-file" accept=".xlsx,.xls" style="display:none;">
+              </label>
+              <span id="avito-id-filename" style="font-size:13px;color:var(--text-2);">Файл не выбран</span>
+              <button id="avito-id-import" class="btn btn-primary" disabled style="margin:0;">Внести AvitoId</button>
+            </div>
+            <div id="avito-id-preview" style="margin-top:12px;font-size:13px;color:var(--text-2);"></div>
+            <div id="avito-id-status" style="margin-top:8px;"></div>
+          </div>
+
+          <!-- Проверка статусов -->
+          <div class="card">
+            <h3>Проверка статусов объявлений</h3>
+            <p style="font-size:13px;color:var(--text-2);margin:0 0 14px;">Сравнивает статус объявления на Авито и в БД. Выберите файл Excel со списком активных объявлений Авито (столбец <b>Id</b>).<br>
+              <b>Проверка 1</b> — объявления из файла, которые в БД помечены как <i>removed</i>.<br>
+              <b>Проверка 2</b> — объявления в БД (активные), которых нет в файле Авито.
+            </p>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+              <label class="btn btn-secondary" style="cursor:pointer;margin:0;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-2px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Выбрать файл
+                <input type="file" id="check-status-file" accept=".xlsx,.xls" style="display:none;">
+              </label>
+              <span id="check-status-filename" style="font-size:13px;color:var(--text-2);">Файл не выбран</span>
+              <button id="check-status-btn" class="btn btn-primary" disabled style="margin:0;">Проверить статусы</button>
+            </div>
+            <div id="check-status-preview" style="margin-top:12px;font-size:13px;color:var(--text-2);"></div>
+            <div id="check-status-result" style="margin-top:10px;"></div>
+            <div id="check-status-export" style="margin-top:10px;display:none;">
+              <button id="check-status-export-btn" class="btn btn-secondary">📥 Выгрузить в Excel</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>1. Изменения по ценам в локальной базе</h3>
+            <div class="table-container">
+              <table class="table">
+                <thead>
+                  <tr><th>ID</th><th>Название</th><th>Новая цена</th></tr>
+                </thead>
+                <tbody id="applied-price-tbody">
+                  <tr><td colspan="3" class="empty">Нет данных. Замените цены в разделе «Изменение цен».</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card">
+            <h3>2. Изменения статуса в локальной БД</h3>
+            <div class="table-container">
+              <table class="table">
+                <thead>
+                  <tr><th>ID</th><th>Название</th><th>Статус</th></tr>
+                </thead>
+                <tbody id="applied-status-tbody">
+                  <tr><td colspan="3" class="empty">Нет данных. Внесите изменения в разделе «Снято с продажи».</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Локальная БД (baikal) -->
+        <div class="section-tab-pane" id="tab-local-db-baikal">
+
+          <!-- Обновить текст (baikal) -->
+          <div class="card">
+            <h3>Обновить текст из Excel</h3>
+            <p style="font-size:13px;color:var(--text-2);margin:0 0 14px;">Выберите файл Excel со столбцами <b>Id</b> и <b>Description</b>. Значения будут записаны в колонку <b>text_avito</b> таблицы baikal по совпадению ID.</p>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+              <label class="btn btn-secondary" style="cursor:pointer;margin:0;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-2px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Выбрать файл
+                <input type="file" id="b-text-file" accept=".xlsx,.xls" style="display:none;">
+              </label>
+              <span id="b-text-filename" style="font-size:13px;color:var(--text-2);">Файл не выбран</span>
+              <button id="b-text-import" class="btn btn-primary" disabled style="margin:0;">Обновить текст</button>
+            </div>
+            <div id="b-text-preview" style="margin-top:12px;font-size:13px;color:var(--text-2);"></div>
+            <div id="b-text-status" style="margin-top:8px;"></div>
+          </div>
+
+          <!-- Внести ImageUrls (baikal) -->
+          <div class="card">
+            <h3>Внести ImageUrls из Excel</h3>
+            <p style="font-size:13px;color:var(--text-2);margin:0 0 14px;">Выберите файл Excel со столбцами <b>Id</b> и <b>ImageUrls</b>. Значения будут записаны в колонку <b>ImageUrls</b> таблицы baikal по совпадению ID.</p>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+              <label class="btn btn-secondary" style="cursor:pointer;margin:0;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-2px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Выбрать файл
+                <input type="file" id="b-image-urls-file" accept=".xlsx,.xls" style="display:none;">
+              </label>
+              <span id="b-image-urls-filename" style="font-size:13px;color:var(--text-2);">Файл не выбран</span>
+              <button id="b-image-urls-import" class="btn btn-primary" disabled style="margin:0;">Внести ImageUrls</button>
+            </div>
+            <div id="b-image-urls-preview" style="margin-top:12px;font-size:13px;color:var(--text-2);"></div>
+            <div id="b-image-urls-status" style="margin-top:8px;"></div>
+          </div>
+
+          <!-- Исправить запятые (baikal) -->
+          <div class="card">
+            <h3>Исправить десятичные разделители</h3>
+            <p style="font-size:13px;color:var(--text-2);margin:0 0 14px;">Заменяет запятые на точки в столбцах <b>centr_otv</b>, <b>diam_otv</b>, <b>width</b> таблицы baikal.</p>
+            <button id="b-fix-decimals-btn" class="btn btn-secondary">Исправить запятые → точки</button>
+            <div id="b-fix-decimals-status" style="margin-top:10px;"></div>
+          </div>
+
+          <!-- Внести AvitoId (baikal) -->
+          <div class="card">
+            <h3>Внести AvitoId из Excel</h3>
+            <p style="font-size:13px;color:var(--text-2);margin:0 0 14px;">Выберите файл Excel со столбцами <b>Id</b> и <b>AvitoId</b>. Значения будут записаны в таблицу baikal по совпадению ID.</p>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+              <label class="btn btn-secondary" style="cursor:pointer;margin:0;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-2px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Выбрать файл
+                <input type="file" id="b-avito-id-file" accept=".xlsx,.xls" style="display:none;">
+              </label>
+              <span id="b-avito-id-filename" style="font-size:13px;color:var(--text-2);">Файл не выбран</span>
+              <button id="b-avito-id-import" class="btn btn-primary" disabled style="margin:0;">Внести AvitoId</button>
+            </div>
+            <div id="b-avito-id-preview" style="margin-top:12px;font-size:13px;color:var(--text-2);"></div>
+            <div id="b-avito-id-status" style="margin-top:8px;"></div>
+          </div>
+
+          <!-- Проверка статусов (baikal) -->
+          <div class="card">
+            <h3>Проверка статусов объявлений</h3>
+            <p style="font-size:13px;color:var(--text-2);margin:0 0 14px;">Сравнивает статус объявления на Авито и в таблице baikal. Выберите файл Excel со списком активных объявлений Авито (столбец <b>Id</b>).<br>
+              <b>Проверка 1</b> — объявления из файла, которые в baikal помечены как <i>removed</i>.<br>
+              <b>Проверка 2</b> — объявления в baikal (активные), которых нет в файле Авито.
+            </p>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+              <label class="btn btn-secondary" style="cursor:pointer;margin:0;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-2px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Выбрать файл
+                <input type="file" id="b-check-status-file" accept=".xlsx,.xls" style="display:none;">
+              </label>
+              <span id="b-check-status-filename" style="font-size:13px;color:var(--text-2);">Файл не выбран</span>
+              <button id="b-check-status-btn" class="btn btn-primary" disabled style="margin:0;">Проверить статусы</button>
+            </div>
+            <div id="b-check-status-preview" style="margin-top:12px;font-size:13px;color:var(--text-2);"></div>
+            <div id="b-check-status-result" style="margin-top:10px;"></div>
+            <div id="b-check-status-export" style="margin-top:10px;display:none;">
+              <button id="b-check-status-export-btn" class="btn btn-secondary">📥 Выгрузить в Excel</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- БД сайта -->
+        <div class="section-tab-pane" id="tab-site-db">
+
+          <div class="card">
+            <h3>Синхронизация таблиц с сайтом</h3>
+            <p style="font-size:13px;color:var(--text-2);margin:0 0 14px;">
+              Выберите таблицы для синхронизации. Данные из локальной БД заменят данные на сервере. Схема таблиц на сервере не меняется.
+            </p>
+            <div id="sync-tables-list" style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;">
+              <!-- Чекбоксы таблиц генерируются из JS -->
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;">
+                <input type="checkbox" id="sync-table-VSE4" value="VSE4" checked> VSE4
+              </label>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+              <button id="site-db-sync-btn" class="btn btn-primary">🔄 Синхронизировать</button>
+              <button id="test-ssh" class="btn btn-secondary">🔌 Проверить SSH</button>
+            </div>
+            <div id="site-db-sync-status" class="status" style="margin-top:12px;"></div>
+            <div id="site-db-sync-results" style="margin-top:10px;font-size:13px;display:none;"></div>
+          </div>
+
+          <div class="card">
+            <h3>Результаты синхронизации с сайтом (API)</h3>
+            <div id="site-sync-summary" style="display:flex;gap:16px;margin-bottom:16px;font-size:13px;color:var(--text-2);"></div>
+            <div class="table-container">
+              <table class="table">
+                <thead>
+                  <tr><th>ID</th><th>Статус</th><th>Ошибка</th></tr>
+                </thead>
+                <tbody id="site-sync-tbody">
+                  <tr><td colspan="3" class="empty">Нет данных. Синхронизация происходит автоматически при применении изменений.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Новые объявления -->
+      <section id="add-items" class="section">
+        <h2>Новые объявления</h2>
+
+        <!-- Вкладки VSE4 / baikal -->
+        <div class="add-items-tabs">
+          <button class="add-items-tab-btn active" data-alias="VSE4">VSE4</button>
+          <button class="add-items-tab-btn" data-alias="baikal">baikal</button>
+        </div>
+
+        <!-- Форма (единая, alias берётся из активной вкладки) -->
+        <div class="card">
+          <h3>Парсинг объявлений</h3>
+          <p class="hint">Вставьте ссылки на отдельные объявления (по одной в строке). Дубли будут удалены автоматически.</p>
+
+          <div class="form-group">
+            <label>Ссылки на объявления (по одной в строке):</label>
+            <textarea id="add-items-urls" class="input" rows="6"
+              placeholder="https://www.avito.ru/irkutsk/...&#10;https://www.avito.ru/irkutsk/..."></textarea>
+          </div>
+
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <button id="add-items-parse-btn" class="btn btn-primary">▶ Парсить</button>
+            <button id="add-items-load-btn" class="btn btn-secondary">↻ Загрузить сохранённые</button>
+            <span id="add-items-parse-status" class="status" style="margin:0;"></span>
+          </div>
+        </div>
+
+        <!-- Таблица результатов -->
+        <div class="card" id="add-items-results-card" style="display:none;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+            <h3 style="margin:0;">
+              Результаты
+              <span id="add-items-alias-badge" class="add-items-alias-badge"></span>
+              <span id="add-items-batch-label" style="font-size:13px;color:var(--text-2);font-weight:400;margin-left:8px;"></span>
+            </h3>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+              <span id="add-items-stats" style="font-size:13px;color:var(--text-2);"></span>
+              <button id="add-items-gen-all-btn" class="btn btn-secondary btn-xs">✍ Текст для всех</button>
+              <button id="add-items-export-btn" class="btn btn-primary btn-xs" disabled>
+                ↑ Экспортировать выбранные
+              </button>
+            </div>
+          </div>
+
+          <div style="overflow-x:auto;">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th style="width:32px;"><input type="checkbox" id="add-items-select-all" title="Выбрать все"></th>
+                  <th style="width:36px;">#</th>
+                  <th data-sort="name" class="sortable">Название</th>
+                  <th data-sort="price_vse" class="sortable" style="width:90px;">Цена</th>
+                  <th data-sort="type_disk" class="sortable" style="width:70px;">Тип</th>
+                  <th data-sort="maker" class="sortable" style="width:120px;">Производитель</th>
+                  <th data-sort="model" class="sortable" style="width:80px;">Модель</th>
+                  <th data-sort="diam" class="sortable" style="width:52px;">R</th>
+                  <th data-sort="width" class="sortable" style="width:52px;">W</th>
+                  <th data-sort="vylet" class="sortable" style="width:52px;">ET</th>
+                  <th data-sort="diam_otv" class="sortable" style="width:60px;">PCD</th>
+                  <th data-sort="centr_otv" class="sortable" style="width:60px;">DIA</th>
+                  <th data-sort="color" class="sortable" style="width:110px;">Цвет</th>
+                  <th style="width:80px;">Фото</th>
+                  <th style="width:90px;">Статус</th>
+                  <th style="width:80px;">Текст</th>
+                </tr>
+              </thead>
+              <tbody id="add-items-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Авито загрузка -->
+      <section id="avito-upload" class="section">
+        <h2>Авито загрузка</h2>
+        <p class="section-desc">Формирование Excel-файла для массовой загрузки объявлений на Авито. Поля из БД подставляются автоматически, остальные берутся из настроек ниже.</p>
+
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+            <h3 style="margin:0;">Статические поля</h3>
+            <div style="display:flex;gap:10px;align-items:center;">
+              <label style="font-size:13px;color:var(--text-2);margin:0;">Таблица:</label>
+              <select id="avito-export-table" class="input" style="width:auto;padding:6px 10px;margin:0;">
+                <option value="VSE4">VSE4</option>
+                <option value="baikal">baikal</option>
+                <option value="all">ВСЕ</option>
+              </select>
+              <button id="avito-settings-save" class="btn btn-secondary">💾 Сохранить настройки</button>
+              <button id="avito-export-btn" class="btn btn-primary">📥 Выгрузить в Excel</button>
+            </div>
+          </div>
+          <div id="avito-settings-status" style="margin-bottom:12px;"></div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px 24px;">
+            <div class="form-group" style="margin:0;">
+              <label>AvitoStatus</label>
+              <input type="text" id="avito-AvitoStatus" class="input" placeholder="Enable / Disable">
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label>AvitoDateEnd</label>
+              <input type="text" id="avito-AvitoDateEnd" class="input" placeholder="dd.mm.yyyy">
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label>ListingFee</label>
+              <input type="text" id="avito-ListingFee" class="input" placeholder="Package / Single / Free">
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label>Category</label>
+              <input type="text" id="avito-Category" class="input" placeholder="Запчасти и аксессуары">
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label>GoodsType</label>
+              <input type="text" id="avito-GoodsType" class="input" placeholder="">
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label>ProductType</label>
+              <input type="text" id="avito-ProductType" class="input" placeholder="Диски">
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label>Condition</label>
+              <input type="text" id="avito-Condition" class="input" placeholder="Новое / Б/у">
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label>AddressID</label>
+              <input type="text" id="avito-AddressID" class="input" placeholder="">
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label>Address</label>
+              <input type="text" id="avito-Address" class="input" placeholder="Город, улица">
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label>EMail</label>
+              <input type="text" id="avito-EMail" class="input" placeholder="email@example.com">
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label>ContactPhone</label>
+              <input type="text" id="avito-ContactPhone" class="input" placeholder="+7...">
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label>ContactMethod</label>
+              <input type="text" id="avito-ContactMethod" class="input" placeholder="По телефону и в сообщениях">
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label>AdType</label>
+              <input type="text" id="avito-AdType" class="input" placeholder="Товар приобретён для продажи">
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label>CompanyName</label>
+              <input type="text" id="avito-CompanyName" class="input" placeholder="">
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label>MultiItem</label>
+              <input type="text" id="avito-MultiItem" class="input" placeholder="1">
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label>Quantity</label>
+              <input type="text" id="avito-Quantity" class="input" placeholder="4">
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label>TargetAudience</label>
+              <input type="text" id="avito-TargetAudience" class="input" placeholder="">
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label>TypeID</label>
+              <input type="text" id="avito-TypeID" class="input" placeholder="">
+            </div>
+          </div>
+
+          <div style="margin-top:16px;padding:12px;background:var(--bg-1);border-radius:6px;font-size:12px;color:var(--text-2);">
+            <b>Поля из БД (подставляются автоматически):</b>
+            Id, AvitoId, Title, Description, Price, ImageUrls, RimBolts, RimBoltsDiameter, RimBrand, RimDIA, RimDiameter, RimModel, RimOffset, RimType, RimWidth
+          </div>
+        </div>
+      </section>
+
+      <!-- Photo Replace Section -->
+      <section id="photo-replace" class="section">
+        <h2>Замена фотографий</h2>
+        <p class="section-desc">Привязка фотографий из каталога к карточкам VSE4. После привязки фото загружаются в Cloudflare R2 и URL сохраняются в ImageUrls.</p>
+
+        <!-- Tabs VSE4 / baikal -->
+        <div class="tabs" style="margin-bottom:16px;">
+          <button class="tab-btn active" data-tab="pr-vse4">VSE4</button>
+          <button class="tab-btn" data-tab="pr-baikal" disabled title="В разработке">baikal</button>
+        </div>
+
+        <!-- Toolbar -->
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap;">
+          <input type="text" id="pr-search" class="input search" placeholder="🔍 Поиск по ID, названию, марке..." style="flex:1;min-width:200px;">
+          <select id="pr-filter-linked" class="input" style="width:auto;padding:6px 10px;">
+            <option value="">Все карточки</option>
+            <option value="false">Без каталога</option>
+            <option value="true">Привязаны</option>
+          </select>
+          <button id="pr-load-btn" class="btn btn-secondary">🔄 Загрузить</button>
+        </div>
+        <div id="pr-status" class="status"></div>
+
+        <!-- List -->
+        <div class="card" style="padding:0;overflow:hidden;">
+          <table class="table" id="pr-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Название</th>
+                <th>Марка / Модель</th>
+                <th>Отв.</th>
+                <th>Цвет</th>
+                <th>Каталог</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="pr-tbody">
+              <tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text-2)">Нажмите «Загрузить» для показа списка</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pagination" id="pr-pagination"></div>
+
+        <!-- Detail panel (скрыт до выбора карточки) -->
+        <div id="pr-detail" style="display:none;margin-top:24px;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+            <button id="pr-back-btn" class="btn btn-secondary">← Назад</button>
+            <h3 id="pr-detail-title" style="margin:0;"></h3>
+          </div>
+
+          <!-- Характеристики карточки -->
+          <div class="card" style="margin-bottom:16px;">
+            <h4 style="margin:0 0 12px;">Характеристики диска</h4>
+            <div id="pr-disc-specs" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px 16px;font-size:13px;"></div>
+          </div>
+
+          <!-- Кандидаты из каталога -->
+          <div class="card" style="margin-bottom:16px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h4 style="margin:0;">Кандидаты из каталога</h4>
+              <span id="pr-candidates-count" style="font-size:12px;color:var(--text-2);"></span>
+            </div>
+            <div id="pr-candidates" style="display:flex;flex-wrap:wrap;gap:12px;">
+              <p style="color:var(--text-2);font-size:13px;">Поиск...</p>
+            </div>
+          </div>
+
+          <!-- Фото выбранного кандидата -->
+          <div id="pr-candidate-photos-block" style="display:none;">
+            <div class="card" style="margin-bottom:16px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+                <h4 style="margin:0;">Фотографии: <span id="pr-selected-candidate-name" style="color:var(--accent);"></span></h4>
+                <div style="display:flex;gap:8px;align-items:center;">
+                  <label style="font-size:13px;color:var(--text-2);">Алгоритм:</label>
+                  <select id="pr-algo-select" class="input" style="width:auto;padding:6px 10px;"></select>
+                </div>
+              </div>
+
+              <!-- Группы фото по категориям -->
+              <div id="pr-photos-grid" style="display:flex;flex-direction:column;gap:16px;"></div>
+
+              <div style="margin-top:16px;display:flex;gap:10px;align-items:center;">
+                <button id="pr-confirm-btn" class="btn btn-primary">✅ Подтвердить привязку и загрузить фото</button>
+                <button id="pr-cancel-candidate-btn" class="btn btn-secondary">Выбрать другой</button>
+                <span id="pr-bind-status" style="font-size:13px;"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -2167,6 +2167,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initNavigation();
   initEventListeners();
   initBrowseDbPath();
+  initPhotoReplace();
   await checkServer();
   await loadConfig();
   await loadAvitoSources();
@@ -2887,4 +2888,259 @@ function renderTextGenSentences() {
       renderTextGenSentences();
     });
   });
+}
+
+// ============================================================================
+// Photo Replace Section
+// ============================================================================
+
+const prState = {
+  page: 1,
+  limit: 50,
+  total: 0,
+  rows: [],
+  currentRow: null,       // выбранная карточка VSE4
+  selectedCandidateId: null,
+  algorithms: [],
+};
+
+function initPhotoReplace() {
+  document.getElementById('pr-load-btn')?.addEventListener('click', () => loadPrList(1));
+  document.getElementById('pr-back-btn')?.addEventListener('click', hidePrDetail);
+  document.getElementById('pr-confirm-btn')?.addEventListener('click', confirmBind);
+  document.getElementById('pr-cancel-candidate-btn')?.addEventListener('click', () => {
+    prState.selectedCandidateId = null;
+    document.getElementById('pr-candidate-photos-block').style.display = 'none';
+  });
+
+  let prSearchTimer;
+  document.getElementById('pr-search')?.addEventListener('input', () => {
+    clearTimeout(prSearchTimer);
+    prSearchTimer = setTimeout(() => loadPrList(1), 400);
+  });
+  document.getElementById('pr-filter-linked')?.addEventListener('change', () => loadPrList(1));
+}
+
+async function loadPrList(page = 1) {
+  prState.page = page;
+  const search  = document.getElementById('pr-search')?.value || '';
+  const linked  = document.getElementById('pr-filter-linked')?.value || '';
+  const params  = new URLSearchParams({ search, page, limit: prState.limit });
+  if (linked) params.set('linked', linked);
+
+  showStatus('pr-status', 'Загрузка...', 'loading');
+  try {
+    const data = await apiRequest(`/catalog/vse4-list?${params}`);
+    prState.rows  = data.rows;
+    prState.total = data.total;
+    renderPrList();
+    showStatus('pr-status', `Показано ${data.rows.length} из ${data.total}`, 'success');
+  } catch (e) {
+    showStatus('pr-status', `Ошибка: ${e.message}`, 'error');
+  }
+}
+
+function renderPrList() {
+  const tbody = document.getElementById('pr-tbody');
+  if (!prState.rows.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text-2)">Ничего не найдено</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = prState.rows.map(row => {
+    const linked = row.catalog_disc_id
+      ? `<span style="color:#4caf50;font-weight:600;">✓ Привязан</span>`
+      : `<span style="color:var(--text-2);">— нет</span>`;
+    return `<tr>
+      <td><code>${escapeHtml(row.ID)}</code></td>
+      <td style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escapeHtml(row.name||'')}">${escapeHtml(row.name||'')}</td>
+      <td>${escapeHtml(row.maker||'')} ${escapeHtml(row.model||'')}</td>
+      <td>${row.count_otv||''}</td>
+      <td>${escapeHtml(row.color||'')}${row.color_code ? ` <code style="font-size:11px;">${row.color_code}</code>` : ''}</td>
+      <td>${linked}</td>
+      <td><button class="btn btn-secondary" style="padding:4px 10px;font-size:12px;" onclick="openPrDetail('${escapeHtml(row.ID)}')">Открыть</button></td>
+    </tr>`;
+  }).join('');
+
+  // Пагинация
+  const pages = Math.ceil(prState.total / prState.limit);
+  renderPagination('pr-pagination', prState.total, prState.page, p => loadPrList(p));
+}
+
+async function openPrDetail(vseId) {
+  const row = prState.rows.find(r => r.ID === vseId);
+  if (!row) return;
+  prState.currentRow = row;
+  prState.selectedCandidateId = null;
+
+  document.getElementById('pr-detail-title').textContent = `${row.ID} — ${row.name || ''}`;
+  document.getElementById('pr-candidate-photos-block').style.display = 'none';
+
+  // Характеристики
+  const specs = document.getElementById('pr-disc-specs');
+  specs.innerHTML = [
+    ['ID', row.ID], ['Марка', row.maker], ['Модель', row.model],
+    ['Отверстий', row.count_otv], ['Цвет', row.color],
+    ['Код цвета', row.color_code || '—'], ['Каталог', row.catalog_disc_id || '—'],
+  ].map(([k,v]) => `<div><span style="color:var(--text-2);font-size:11px;">${k}</span><br><b>${escapeHtml(String(v||'—'))}</b></div>`).join('');
+
+  document.getElementById('pr-detail').style.display = 'block';
+  document.getElementById('pr-table').closest('.card').style.display = 'none';
+  document.getElementById('pr-pagination').style.display = 'none';
+
+  // Загрузить алгоритмы
+  if (!prState.algorithms.length) {
+    try {
+      prState.algorithms = await apiRequest('/catalog/algorithms');
+    } catch {}
+  }
+  const sel = document.getElementById('pr-algo-select');
+  sel.innerHTML = prState.algorithms.map(a =>
+    `<option value="${a.id}">${a.name}</option>`
+  ).join('');
+
+  // Поиск кандидатов
+  document.getElementById('pr-candidates').innerHTML = '<p style="color:var(--text-2);font-size:13px;">Поиск в каталоге...</p>';
+  document.getElementById('pr-candidates-count').textContent = '';
+
+  const params = new URLSearchParams();
+  if (row.maker)      params.set('maker', row.maker);
+  if (row.model)      params.set('model', row.model);
+  if (row.count_otv)  params.set('holes', row.count_otv);
+  if (row.color_code) params.set('color_code', row.color_code);
+
+  try {
+    const candidates = await apiRequest(`/catalog/search?${params}`);
+    renderPrCandidates(candidates);
+  } catch (e) {
+    document.getElementById('pr-candidates').innerHTML = `<p style="color:#f44;font-size:13px;">Ошибка поиска: ${escapeHtml(e.message)}</p>`;
+  }
+}
+
+function renderPrCandidates(candidates) {
+  const el = document.getElementById('pr-candidates');
+  const cnt = document.getElementById('pr-candidates-count');
+  cnt.textContent = `Найдено: ${candidates.length}`;
+
+  if (!candidates.length) {
+    el.innerHTML = '<p style="color:var(--text-2);font-size:13px;">Совпадений не найдено. Попробуйте выполнить поиск вручную или уточнить данные.</p>';
+    return;
+  }
+
+  el.innerHTML = candidates.map(c => `
+    <div class="pr-candidate-card" data-id="${c.id}" onclick="selectPrCandidate('${c.id}')"
+      style="border:2px solid var(--border);border-radius:8px;padding:10px;cursor:pointer;width:160px;transition:border-color .15s;">
+      <div style="width:140px;height:110px;background:var(--bg-1);border-radius:4px;margin-bottom:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+        ${c.previewUrl
+          ? `<img src="${c.previewUrl}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">`
+          : `<span style="font-size:11px;color:var(--text-2)">нет фото</span>`}
+      </div>
+      <div style="font-size:11px;color:var(--text-2);">${escapeHtml(c.article||'')}</div>
+      <div style="font-size:12px;font-weight:600;">${escapeHtml(c.manufacturer||'')} ${escapeHtml(c.model||'')}</div>
+      <div style="font-size:11px;color:var(--text-2);">${c.holes} отв. · <code>${escapeHtml(c.color||'')}</code></div>
+    </div>
+  `).join('');
+}
+
+async function selectPrCandidate(discId) {
+  prState.selectedCandidateId = discId;
+
+  // Подсветить выбранный
+  document.querySelectorAll('.pr-candidate-card').forEach(el => {
+    el.style.borderColor = el.dataset.id === discId ? 'var(--accent)' : 'var(--border)';
+  });
+
+  const block = document.getElementById('pr-candidate-photos-block');
+  block.style.display = 'block';
+  document.getElementById('pr-photos-grid').innerHTML = '<p style="color:var(--text-2);">Загрузка фото...</p>';
+  document.getElementById('pr-bind-status').textContent = '';
+
+  try {
+    const disc = await apiRequest(`/catalog/disc/${discId}`);
+    document.getElementById('pr-selected-candidate-name').textContent =
+      `${disc.manufacturer} ${disc.model} · ${disc.color}`;
+    renderPrPhotosGrid(disc.photos);
+  } catch (e) {
+    document.getElementById('pr-photos-grid').innerHTML =
+      `<p style="color:#f44;">Ошибка: ${escapeHtml(e.message)}</p>`;
+  }
+}
+
+const PHOTO_CATEGORY_LABELS = {
+  AVITO_MAIN:       'Avito Главное',
+  AVITO_EXTRA_MAIN: 'Avito Доп. главное',
+  AVITO_EXTRA:      'Avito Дополнительные',
+  SITE:             'Сайт',
+  RENOVATION:       'Ремонт',
+};
+
+function renderPrPhotosGrid(photos) {
+  const grid = document.getElementById('pr-photos-grid');
+  if (!photos.length) {
+    grid.innerHTML = '<p style="color:var(--text-2);">Нет фотографий в каталоге</p>';
+    return;
+  }
+
+  const byCategory = {};
+  photos.forEach(p => {
+    (byCategory[p.category] = byCategory[p.category] || []).push(p);
+  });
+
+  grid.innerHTML = Object.entries(byCategory).map(([cat, items]) => `
+    <div>
+      <div style="font-size:12px;font-weight:600;color:var(--text-2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em;">
+        ${PHOTO_CATEGORY_LABELS[cat] || cat} (${items.length})
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        ${items.map(p => `
+          <div style="position:relative;width:100px;height:80px;border-radius:4px;overflow:hidden;background:var(--bg-1);">
+            <img src="${p.url}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">
+            ${p.subcategory ? `<span style="position:absolute;bottom:2px;left:2px;background:rgba(0,0,0,.6);color:#fff;font-size:9px;padding:1px 4px;border-radius:2px;">${p.subcategory}</span>` : ''}
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+async function confirmBind() {
+  const row = prState.currentRow;
+  const discId = prState.selectedCandidateId;
+  const algoId = document.getElementById('pr-algo-select')?.value;
+
+  if (!row || !discId || !algoId) return;
+
+  const btn = document.getElementById('pr-confirm-btn');
+  const statusEl = document.getElementById('pr-bind-status');
+  btn.disabled = true;
+  btn.textContent = '⏳ Загрузка фото в R2...';
+  statusEl.textContent = '';
+  statusEl.style.color = '';
+
+  try {
+    const result = await apiRequest('/catalog/bind', {
+      method: 'POST',
+      body: JSON.stringify({ vseId: row.ID, catalogDiscId: discId, algoId }),
+    });
+    btn.textContent = '✅ Привязка подтверждена';
+    statusEl.textContent = `Загружено ${result.photos} фото. ImageUrls обновлены.`;
+    statusEl.style.color = '#4caf50';
+
+    // Обновить строку в списке
+    const listRow = prState.rows.find(r => r.ID === row.ID);
+    if (listRow) listRow.catalog_disc_id = discId;
+  } catch (e) {
+    btn.disabled = false;
+    btn.textContent = '✅ Подтвердить привязку и загрузить фото';
+    statusEl.textContent = `Ошибка: ${e.message}`;
+    statusEl.style.color = '#f44336';
+  }
+}
+
+function hidePrDetail() {
+  document.getElementById('pr-detail').style.display = 'none';
+  document.getElementById('pr-table').closest('.card').style.display = '';
+  document.getElementById('pr-pagination').style.display = '';
+  prState.currentRow = null;
+  renderPrList();
 }
